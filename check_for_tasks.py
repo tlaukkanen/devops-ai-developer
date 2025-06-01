@@ -6,7 +6,7 @@ AZURE_DEVOPS_ORG = os.environ.get("AZURE_DEVOPS_ORG")
 AZURE_DEVOPS_PROJECT = os.environ.get("AZURE_DEVOPS_PROJECT")
 AZURE_DEVOPS_PAT = os.environ.get("AZURE_DEVOPS_PAT")  # Personal Access Token
 AI_DEVELOPER_TAG = "AI Developer"  # Tag used to identify work items for the agent
-
+WORK_ITEM_STATUS = "To Do"  # Status to filter work items
 
 def get_next_work_item():
     url = f"https://dev.azure.com/{AZURE_DEVOPS_ORG}/{AZURE_DEVOPS_PROJECT}/_apis/wit/wiql?api-version=7.0"
@@ -16,7 +16,7 @@ def get_next_work_item():
         FROM WorkItems
         WHERE [System.TeamProject] = '{AZURE_DEVOPS_PROJECT}'
           AND [System.Tags] CONTAINS '{AI_DEVELOPER_TAG}'
-          AND [System.State] = 'New'
+          AND [System.State] = '{WORK_ITEM_STATUS}'
         ORDER BY [System.CreatedDate] ASC
         """
     }
