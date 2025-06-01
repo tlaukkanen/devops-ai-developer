@@ -22,6 +22,6 @@ jobs:
           # Add GitHub remote and fetch latest changes
           git remote add github https://github.com/tlaukkanen/devops-ai-developer.git
           git fetch github
-          git reset --hard github/main
+          git checkout -B main github/main
           git push origin main --force
         displayName: 'Sync from GitHub'
