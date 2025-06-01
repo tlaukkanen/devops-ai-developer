@@ -32,7 +32,7 @@ jobs:
   - job: RunAIAgent
     dependsOn: CheckForTasks
     # This job runs only if a new task is found and is not zero
-    condition: and(succeeded(), or(dependencies.CheckForTasks.outputs['SetTaskId.TaskId'], ne(dependencies.CheckForTasks.outputs['SetTaskId.TaskId'], '0')))
+    condition: and(succeeded(), and(dependencies.CheckForTasks.outputs['SetTaskId.TaskId'], ne(dependencies.CheckForTasks.outputs['SetTaskId.TaskId'], '0')))
     pool:
       vmImage: 'ubuntu-latest' # Or self-hosted with preinstalled tools
     steps:
