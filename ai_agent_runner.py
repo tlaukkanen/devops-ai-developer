@@ -41,7 +41,6 @@ def implement_task_logic(work_item):
     # Otherwise, implement the required change (not implemented here)
     pass
 
-
 def main():
     if len(sys.argv) < 2:
         print("Usage: python ai_agent_runner.py <work_item_id>")
