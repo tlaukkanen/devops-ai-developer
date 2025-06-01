@@ -31,6 +31,9 @@ jobs:
 
   - job: RunAIAgent
     dependsOn: CheckForTasks
+    variables:
+      - name: TaskId
+        value: $[ dependencies.CheckForTasks.outputs['SetTaskId.TaskId'] ]
     # This job runs only if a new task is found and is not zero
     condition: and(succeeded(), and(dependencies.CheckForTasks.outputs['SetTaskId.TaskId'], ne(dependencies.CheckForTasks.outputs['SetTaskId.TaskId'], '0')))
     pool:
@@ -43,19 +46,24 @@ jobs:
           versionSpec: '3.10'
 
       - script: |
-          pip install -r requirements.txt
-          python ai_agent_runner.py
+          pip install uv
+          uv sync
+          python ai_agent_runner.py $(TaskId)
         displayName: 'Run LangChain AI Agent'
+        env:
+          AZURE_DEVOPS_ORG: tlaukkanen
+          AZURE_DEVOPS_PROJECT: simple-to-do
+          AZURE_DEVOPS_PAT: $(System.AccessToken)
 
-      - script: |
-          git config user.email "ai-bot@example.com"
-          git config user.name "AI Bot"
-          git checkout -b ai/task-${TASK_ID}
-          git add .
-          git commit -m "Auto-implemented task ${TASK_ID}"
-          git push origin ai/task-${TASK_ID}
-        displayName: 'Commit & Push Changes'
+      # - script: |
+      #     git config user.email "ai-bot@example.com"
+      #     git config user.name "AI Bot"
+      #     git checkout -b ai/task-${TASK_ID}
+      #     git add .
+      #     git commit -m "Auto-implemented task ${TASK_ID}"
+      #     git push origin ai/task-${TASK_ID}
+      #   displayName: 'Commit & Push Changes'
 
-      - script: |
-          python create_pull_request.py ${TASK_ID}
-        displayName: 'Create Pull Request'
+      # - script: |
+      #     python create_pull_request.py ${TASK_ID}
+      #   displayName: 'Create Pull Request'
