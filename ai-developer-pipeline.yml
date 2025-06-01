@@ -48,7 +48,7 @@ jobs:
       - script: |
           pip install uv
           uv sync
-          python ai_agent_runner.py $(TaskId)
+          uv run ai_agent_runner.py $(TaskId)
         displayName: 'Run LangChain AI Agent'
         env:
           AZURE_DEVOPS_ORG: tlaukkanen
