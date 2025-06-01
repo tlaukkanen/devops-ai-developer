@@ -1,0 +1,36 @@
+trigger: none
+schedules:
+  - cron: "0 * * * *" # Optional hourly trigger
+    displayName: Hourly check
+    branches:
+      include: [ main ]
+    always: true
+
+jobs:
+  - job: RunAIAgent
+    pool:
+      vmImage: 'ubuntu-latest' # Or self-hosted with preinstalled tools
+    steps:
+      - checkout: self
+
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.10'
+
+      - script: |
+          pip install -r requirements.txt
+          python ai_agent_runner.py
+        displayName: 'Run LangChain AI Agent'
+
+      - script: |
+          git config user.email "ai-bot@example.com"
+          git config user.name "AI Bot"
+          git checkout -b ai/task-${TASK_ID}
+          git add .
+          git commit -m "Auto-implemented task ${TASK_ID}"
+          git push origin ai/task-${TASK_ID}
+        displayName: 'Commit & Push Changes'
+
+      - script: |
+          python create_pull_request.py ${TASK_ID}
+        displayName: 'Create Pull Request'
