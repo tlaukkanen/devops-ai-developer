@@ -26,9 +26,13 @@ def get_next_work_item():
         auth=("", AZURE_DEVOPS_PAT)
     )
     response.raise_for_status()
+    print("Query executed successfully. Processing results...")
     work_items = response.json().get("workItems", [])
+    print(f"Found {len(work_items)} new work items.")
     if not work_items:
+        print("No new work items found. Setting task ID to 0.")
         return 0  # No new work items
+    print(f"Next work item ID: {work_items[0]['id']}")
     return work_items[0]["id"]
 
 

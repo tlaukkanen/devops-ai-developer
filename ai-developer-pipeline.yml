@@ -24,7 +24,8 @@ jobs:
           AZURE_DEVOPS_PAT: $(System.AccessToken)
 
       - script: |
-          echo "##vso[task.setvariable variable=TASK_ID]$(cat task_id.txt)"
+          echo "##vso[task.setvariable variable=TASK_ID;isOutput=true]$(cat task_id.txt)"
+          echo "Task ID set to: $(cat task_id.txt)"
         displayName: 'Set Task ID Variable'
 
   - job: RunAIAgent
@@ -32,7 +33,7 @@ jobs:
     variables:
       TASK_ID: $[ dependencies.CheckForTasks.outputs['task_id'] ]
     # This job runs only if a new task is found and is not zero
-    condition: and(succeeded(), ne(variables['TASK_ID'], '0'))
+    condition: and(succeeded(), or(ne(variables['TASK_ID'], '0'), ne(variables['TASK_ID'], '')))
     pool:
       vmImage: 'ubuntu-latest' # Or self-hosted with preinstalled tools
     steps:
