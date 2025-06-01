@@ -27,6 +27,7 @@ def get_next_work_item():
     )
     response.raise_for_status()
     print("Query executed successfully. Processing results...")
+    print(f"Raw JSON response: {response.text}")
     work_items = response.json().get("workItems", [])
     print(f"Found {len(work_items)} new work items.")
     if not work_items:
