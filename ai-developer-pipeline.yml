@@ -8,7 +8,7 @@ trigger: none
 
 resources:
   repositories:
-    - repository: devops-ai-developer
+    - repository: self
       type: github
       name: tlaukkanen/devops-ai-developer
       endpoint: 'tlaukkanen'
