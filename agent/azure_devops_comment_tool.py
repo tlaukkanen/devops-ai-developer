@@ -37,12 +37,9 @@ def add_azure_devops_work_item_comment(
     return f"Comment added to work item {work_item_id}."
 
 class AzureDevOpsCommentTool(StructuredTool):
-    name = "add_azure_devops_work_item_comment"
-    description = (
-        "Add a comment to an Azure DevOps work item. "
-        "Requires work_item_id (str) and comment (str) as arguments. "
-        "Uses org, project, and PAT from environment variables or constructor."
-    )
+    """
+    StructuredTool for adding a comment to an Azure DevOps work item.
+    """
     args_schema = AzureDevOpsCommentInput
 
     def __init__(self, org=None, project=None, pat=None):
@@ -50,7 +47,11 @@ class AzureDevOpsCommentTool(StructuredTool):
             func=lambda work_item_id, comment: add_azure_devops_work_item_comment(
                 work_item_id, comment, org=org, project=project, pat=pat
             ),
-            name=self.name,
-            description=self.description,
-            args_schema=self.args_schema,
+            name="add_azure_devops_work_item_comment",
+            description=(
+                "Add a comment to an Azure DevOps work item. "
+                "Requires work_item_id (str) and comment (str) as arguments. "
+                "Uses org, project, and PAT from environment variables or constructor."
+            ),
+            args_schema=AzureDevOpsCommentInput,
         )
