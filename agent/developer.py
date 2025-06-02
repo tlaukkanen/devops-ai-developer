@@ -20,9 +20,6 @@ class DeveloperAgent:
             azure_deployment="gpt-4.1",
             api_version="2024-12-01-preview"
         )
-        self.memory = InMemoryChatMessageHistory(
-            session_id="developer_agent",
-        )
         self.agent = create_tool_calling_agent(
             llm=self.llm,
             tools=self.tools,
