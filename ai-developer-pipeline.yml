@@ -80,6 +80,19 @@ jobs:
           AZURE_DEVOPS_PAT: $(System.AccessToken)
           AZURE_OPENAI_API_KEY: $(AZURE_OPENAI_API_KEY)
           AZURE_OPENAI_ENDPOINT: $(AZURE_OPENAI_ENDPOINT)
+      
+      # Zip the simple-to-do repository
+      - script: |
+          cd simple-to-do
+          zip -r ../simple-to-do.zip .
+        displayName: 'Zip simple-to-do Repository'
+
+      # Upload the zip file as an artifact
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '../simple-to-do.zip'
+          ArtifactName: 'simple-to-do'
+          publishLocation: 'Container'
 
       # - script: |
       #     git config user.email "ai-bot@example.com"
