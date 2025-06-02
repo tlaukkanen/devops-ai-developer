@@ -32,7 +32,7 @@ class DeveloperAgent:
         )
 
     def develop_feature(self, specification):
-        print(f"Agent is developing the feature: {feature_name}")
+        print(f"Agent is developing feature with specification:\n{specification}")
         # Initiating LangChain agent execution...
         config = {"configurable": {"session_id": "developer_agent"}, "max_concurrency": 1}
         result = self.agent_executor.invoke(
