@@ -2,6 +2,8 @@ import os
 import sys
 import requests
 
+from agent.developer import DeveloperAgent
+
 # Configuration (set these as environment variables in your pipeline)
 AZURE_DEVOPS_ORG = os.environ.get("AZURE_DEVOPS_ORG")
 AZURE_DEVOPS_PROJECT = os.environ.get("AZURE_DEVOPS_PROJECT")
@@ -39,6 +41,11 @@ def implement_task_logic(work_item):
     # add_comment_to_work_item(work_item['id'], "Need more information to proceed.")
     # sys.exit(0)
     # Otherwise, implement the required change (not implemented here)
+    agent = DeveloperAgent()  # Assuming DeveloperAgent is defined elsewhere
+    feature_name = work_item['fields'].get('System.Title', 'Unnamed Feature')
+    specification = f"Develop the feature: {feature_name}"
+    response = agent.develop_feature(specification)
+    print(f"Agent response: {response}")
     pass
 
 def main():

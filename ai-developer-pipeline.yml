@@ -1,10 +1,10 @@
 trigger: none
-schedules:
-  - cron: "0 * * * *" # Optional hourly trigger
-    displayName: Hourly check
-    branches:
-      include: [ main ]
-    always: true
+# schedules:
+#   - cron: "0 * * * *" # Optional hourly trigger
+#     displayName: Hourly check
+#     branches:
+#       include: [ main ]
+#     always: true
 
 jobs:
   - job: CheckForTasks
