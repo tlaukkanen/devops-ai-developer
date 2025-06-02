@@ -48,7 +48,19 @@ def implement_task_logic(work_item):
     codebase_path = values.get('codebase_path', 'codebase')
     agent = DeveloperAgent(codebase_path=codebase_path)
     feature_name = work_item['fields'].get('System.Title', 'Unnamed Feature')
-    specification = f"Develop the feature: {feature_name}"
+    specification = f"""
+    Develop the feature: {feature_name}
+    
+    Azure DevOps Work Item ID: {work_item['id']}
+    Description: {work_item['fields'].get('System.Description', 'No description provided.')}
+    Tags: {', '.join(work_item['fields'].get('System.Tags', '').split(';')) if 'System.Tags' in work_item['fields'] else 'No tags'}
+    Priority: {work_item['fields'].get('Microsoft.VSTS.Common.Priority', 'No priority specified')}
+    
+    Please implement the feature in the codebase located at {codebase_path}.
+    Ensure to follow best practices and document your code.
+    
+    If you need to ask for more information, please add a comment to the work item.
+    """
     response = agent.develop_feature(specification)
     #print(f"Agent response: {response}")
     pass

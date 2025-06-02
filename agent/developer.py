@@ -3,7 +3,9 @@ from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.pydantic_v1 import BaseModel, Field
 from langchain_community.agent_toolkits.load_tools import load_tools
+
 from langchain_community.agent_toolkits import FileManagementToolkit
+from agent.azure_devops_comment_tool import AzureDevOpsCommentTool
 
 
 class DeveloperAgent:
@@ -16,6 +18,8 @@ class DeveloperAgent:
             root_dir=str(codebase_path)
         )
         self.tools = toolkit.get_tools()
+        # Register AzureDevOpsCommentTool
+        self.tools.append(AzureDevOpsCommentTool())
         self.system_prompt = "You are a developer agent. Your task is to assist with software development tasks."
         prompt = ChatPromptTemplate.from_messages(
             [
