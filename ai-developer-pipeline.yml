@@ -54,10 +54,10 @@ jobs:
       vmImage: 'ubuntu-latest' # Or self-hosted with preinstalled tools
     steps:
       - checkout: self
-        path: '$(System.DefaultWorkingDirectory)/devops-ai-developer'
+        path: 'devops-ai-developer'
 
       - checkout: simple-to-do
-        path: '$(System.DefaultWorkingDirectory)/simple-to-do'
+        path: 'simple-to-do'
         displayName: 'Checkout simple-to-do repository'
 
       - task: UsePythonVersion@0
@@ -69,7 +69,7 @@ jobs:
           uv sync
           uv run ai_agent_runner.py $(TaskId) --codebase-path ../simple-to-do
         displayName: 'Run LangChain AI Agent'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/devops-ai-developer'
+        workingDirectory: '$(Build.SourcesDirectory)/devops-ai-developer'
         env:
           AZURE_DEVOPS_ORG: tlaukkanen
           AZURE_DEVOPS_PROJECT: simple-to-do
