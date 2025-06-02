@@ -41,23 +41,33 @@ def implement_task_logic(work_item):
     # add_comment_to_work_item(work_item['id'], "Need more information to proceed.")
     # sys.exit(0)
     # Otherwise, implement the required change (not implemented here)
-    agent = DeveloperAgent()  # Assuming DeveloperAgent is defined elsewhere
+    # Accept codebase_path as a parameter (default to "codebase")
+    import inspect
+    frame = inspect.currentframe()
+    args, _, _, values = inspect.getargvalues(frame)
+    codebase_path = values.get('codebase_path', 'codebase')
+    agent = DeveloperAgent(codebase_path=codebase_path)
     feature_name = work_item['fields'].get('System.Title', 'Unnamed Feature')
     specification = f"Develop the feature: {feature_name}"
     response = agent.develop_feature(specification)
-    print(f"Agent response: {response}")
+    #print(f"Agent response: {response}")
     pass
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python ai_agent_runner.py <work_item_id>")
-        sys.exit(1)
-    work_item_id = sys.argv[1]
+    import argparse
+    parser = argparse.ArgumentParser(description="Run the AI Developer Agent on a work item.")
+    parser.add_argument("work_item_id", help="Azure DevOps work item ID")
+    parser.add_argument("--codebase-path", default="codebase", help="Path to the codebase directory (default: codebase)")
+    args = parser.parse_args()
+
+    work_item_id = args.work_item_id
+    codebase_path = args.codebase_path
+
     if work_item_id == "0":
         print("No work item to process.")
         sys.exit(0)
     work_item = get_work_item_details(work_item_id)
-    implement_task_logic(work_item)
+    implement_task_logic(work_item, codebase_path=codebase_path)
 
 
 if __name__ == "__main__":

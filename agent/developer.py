@@ -3,11 +3,19 @@ from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.pydantic_v1 import BaseModel, Field
 from langchain_community.agent_toolkits.load_tools import load_tools
+from langchain_community.agent_toolkits import FileManagementToolkit
 
 
 class DeveloperAgent:
-    def __init__(self):
-        self.tools = []
+    def __init__(self, codebase_path: str = "codebase"):
+        """
+        Initializes the DeveloperAgent with a specified codebase path.
+        :param codebase_path: Path to the codebase directory.
+        """
+        toolkit = FileManagementToolkit(
+            root_dir=str(codebase_path)
+        )
+        self.tools = toolkit.get_tools()
         self.system_prompt = "You are a developer agent. Your task is to assist with software development tasks."
         prompt = ChatPromptTemplate.from_messages(
             [

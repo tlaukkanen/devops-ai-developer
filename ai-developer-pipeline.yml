@@ -6,12 +6,24 @@ trigger: none
 #       include: [ main ]
 #     always: true
 
+resources:
+  repositories:
+    - repository: simple-to-do
+      type: git
+      name: simple-to-do
+      ref: refs/heads/main
+      trigger: none
+
 jobs:
   - job: CheckForTasks
     pool:
       vmImage: 'ubuntu-latest' # Or self-hosted with preinstalled tools
     steps:
       - checkout: self
+
+      - checkout: simple-to-do
+        path: 'simple-to-do'
+        displayName: 'Checkout simple-to-do repository'
 
       - task: PythonScript@0
         displayName: 'Check for New Tasks'
@@ -48,7 +60,7 @@ jobs:
       - script: |
           pip install uv
           uv sync
-          uv run ai_agent_runner.py $(TaskId)
+          uv run ai_agent_runner.py $(TaskId) --codebase-path simple-to-do
         displayName: 'Run LangChain AI Agent'
         env:
           AZURE_DEVOPS_ORG: tlaukkanen
