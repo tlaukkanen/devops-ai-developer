@@ -54,10 +54,10 @@ jobs:
       vmImage: 'ubuntu-latest' # Or self-hosted with preinstalled tools
     steps:
       - checkout: self
-        path: 'devops-ai-developer'
+        path: '$(System.DefaultWorkingDirectory)/devops-ai-developer'
 
       - checkout: simple-to-do
-        path: 'simple-to-do'
+        path: '$(System.DefaultWorkingDirectory)/simple-to-do'
         displayName: 'Checkout simple-to-do repository'
 
       - task: UsePythonVersion@0
