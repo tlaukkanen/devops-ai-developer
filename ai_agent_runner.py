@@ -58,6 +58,7 @@ def implement_task_logic(work_item, codebase_path='codebase'):
     
     Please implement the feature in the codebase located at {codebase_path}.
     Ensure to follow best practices and document your code.
+    Use the shell tool for any necessary shell commands and make sure that the code is well-tested without errors.
     
     If you need to ask for more information, please add a comment to the work item.
     """

@@ -60,6 +60,10 @@ jobs:
         path: 'simple-to-do'
         displayName: 'Checkout simple-to-do repository'
 
+      - task: UseNode@1
+        inputs:
+          versionSpec: '22.x'
+
       - task: UsePythonVersion@0
         inputs:
           versionSpec: '3.12'
