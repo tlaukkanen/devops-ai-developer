@@ -83,14 +83,14 @@ jobs:
       
       # Zip the simple-to-do repository
       - script: |
-          cd simple-to-do
-          zip -r ../simple-to-do.zip .
+          zip -r $(Pipeline.Workspace)/simple-to-do.zip .
         displayName: 'Zip simple-to-do Repository'
+        workingDirectory: '$(Pipeline.Workspace)/simple-to-do'
 
       # Upload the zip file as an artifact
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: '../simple-to-do.zip'
+          PathtoPublish: '$(Pipeline.Workspace)/simple-to-do.zip'
           ArtifactName: 'simple-to-do'
           publishLocation: 'Container'
 
