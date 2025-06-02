@@ -54,6 +54,8 @@ jobs:
           AZURE_DEVOPS_ORG: tlaukkanen
           AZURE_DEVOPS_PROJECT: simple-to-do
           AZURE_DEVOPS_PAT: $(System.AccessToken)
+          AZURE_OPENAI_API_KEY: $(AZURE_OPENAI_API_KEY)
+          AZURE_OPENAI_ENDPOINT: $(AZURE_OPENAI_ENDPOINT)
 
       # - script: |
       #     git config user.email "ai-bot@example.com"
