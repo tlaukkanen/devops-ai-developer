@@ -8,9 +8,9 @@ trigger: none
 
 resources:
   repositories:
-    - repository: self
-      type: git
-      name: devops-ai-developer
+    - repository: devops-ai-developer
+      type: github
+      name: tlaukkanen/devops-ai-developer
       ref: refs/heads/main
       trigger: none
     - repository: simple-to-do
@@ -24,11 +24,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest' # Or self-hosted with preinstalled tools
     steps:
-      - checkout: self
-
-      - checkout: simple-to-do
-        path: 'simple-to-do'
-        displayName: 'Checkout simple-to-do repository'
+      - checkout: devops-ai-developer
 
       - task: PythonScript@0
         displayName: 'Check for New Tasks'
@@ -56,7 +52,11 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest' # Or self-hosted with preinstalled tools
     steps:
-      - checkout: self
+      - checkout: devops-ai-developer
+
+      - checkout: simple-to-do
+        path: 'simple-to-do'
+        displayName: 'Checkout simple-to-do repository'
 
       - task: UsePythonVersion@0
         inputs:
