@@ -25,7 +25,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest' # Or self-hosted with preinstalled tools
     steps:
-      - checkout: devops-ai-developer
+      - checkout: self
 
       - task: PythonScript@0
         displayName: 'Check for New Tasks'
@@ -53,7 +53,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest' # Or self-hosted with preinstalled tools
     steps:
-      - checkout: devops-ai-developer
+      - checkout: self
 
       - checkout: simple-to-do
         path: 'simple-to-do'
