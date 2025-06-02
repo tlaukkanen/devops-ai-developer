@@ -19,7 +19,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest' # Or self-hosted with preinstalled tools
     steps:
-      - checkout: git://github.com/tlaukkanen/devops-ai-developer
+      - checkout: https://github.com/tlaukkanen/devops-ai-developer.git
 
       - task: PythonScript@0
         displayName: 'Check for New Tasks'
@@ -47,7 +47,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest' # Or self-hosted with preinstalled tools
     steps:
-      - checkout: git://github.com/tlaukkanen/devops-ai-developer
+      - checkout: https://github.com/tlaukkanen/devops-ai-developer.git
 
       - checkout: simple-to-do
         path: 'simple-to-do'
