@@ -33,7 +33,7 @@ def add_comment_to_work_item(work_item_id, comment):
     return response.json()
 
 
-def implement_task_logic(work_item):
+def implement_task_logic(work_item, codebase_path='codebase'):
     # Placeholder: Implement your AI logic here
     # For now, just print the work item title and ID
     print(f"Implementing work item {work_item['id']}: {work_item['fields'].get('System.Title')}")
