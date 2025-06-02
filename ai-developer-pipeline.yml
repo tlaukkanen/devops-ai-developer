@@ -8,6 +8,11 @@ trigger: none
 
 resources:
   repositories:
+    - repository: self
+      type: git
+      name: devops-ai-developer
+      ref: refs/heads/main
+      trigger: none
     - repository: simple-to-do
       type: git
       name: simple-to-do
