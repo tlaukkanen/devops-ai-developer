@@ -40,7 +40,6 @@ class AzureDevOpsCommentTool(StructuredTool):
     """
     StructuredTool for adding a comment to an Azure DevOps work item.
     """
-    args_schema = AzureDevOpsCommentInput
 
     def __init__(self, org=None, project=None, pat=None):
         super().__init__(
