@@ -5,9 +5,8 @@ from langchain.pydantic_v1 import BaseModel, Field
 from langchain_community.agent_toolkits.load_tools import load_tools
 
 from langchain_community.agent_toolkits import FileManagementToolkit
-from langchain_community.tools import ShellTool
 from agent.azure_devops_comment_tool import AzureDevOpsCommentTool
-
+from agent.run_shell_command_tool import RunShellCommandTool
 
 class DeveloperAgent:
     def __init__(self, codebase_path: str = "codebase"):
@@ -20,9 +19,8 @@ class DeveloperAgent:
         )
         # Load tools for file management and shell commands
         file_tools = toolkit.get_tools()
-        shell_tool = ShellTool()
-        self.tools = file_tools + [shell_tool]
-        # Register AzureDevOpsCommentTool
+        self.tools = file_tools
+        self.tools.append(RunShellCommandTool())
         self.tools.append(AzureDevOpsCommentTool())
         self.system_prompt = "You are a developer agent. Your task is to assist with software development tasks."
         prompt = ChatPromptTemplate.from_messages(
