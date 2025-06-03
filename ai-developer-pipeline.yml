@@ -63,7 +63,7 @@ jobs:
 
       - task: UseNode@1
         inputs:
-          versionSpec: '22.x'
+          version: '22.x'
 
       - task: UsePythonVersion@0
         inputs:
@@ -85,7 +85,7 @@ jobs:
       
       # Zip the simple-to-do repository
       - script: |
-          zip -r $(Pipeline.Workspace)/simple-to-do.zip .
+          zip -r $(Pipeline.Workspace)/simple-to-do.zip . -x "node_modules/*"
         displayName: 'Zip simple-to-do Repository'
         workingDirectory: '$(Pipeline.Workspace)/simple-to-do'
 
