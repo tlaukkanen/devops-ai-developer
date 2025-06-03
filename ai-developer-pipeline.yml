@@ -78,7 +78,7 @@ jobs:
         env:
           AZURE_DEVOPS_ORG: tlaukkanen
           AZURE_DEVOPS_PROJECT: simple-to-do
-          AZURE_DEVOPS_REPO_ID: simple-to-do
+          AZURE_DEVOPS_REPO_ID: "19adab5a-b5ca-498e-8373-43a217f3c892" # Replace with your actual repo ID
           AZURE_DEVOPS_PAT: $(System.AccessToken)
           AZURE_OPENAI_API_KEY: $(AZURE_OPENAI_API_KEY)
           AZURE_OPENAI_ENDPOINT: $(AZURE_OPENAI_ENDPOINT)
