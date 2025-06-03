@@ -5,14 +5,29 @@ from langchain.pydantic_v1 import BaseModel, Field
 from langchain_community.agent_toolkits.load_tools import load_tools
 
 from langchain_community.agent_toolkits import FileManagementToolkit
+
 from agent.azure_devops_comment_tool import AzureDevOpsCommentTool
 from agent.run_shell_command_tool import RunShellCommandTool
+from agent.azure_devops_pr_tool import AzureDevOpsPRTool
+
+from typing import Optional
 
 class DeveloperAgent:
-    def __init__(self, codebase_path: str = "codebase"):
+    def __init__(
+        self,
+        codebase_path: str = "codebase",
+        azure_devops_org: Optional[str] = None,
+        azure_devops_project: Optional[str] = None,
+        azure_devops_repo_id: Optional[str] = None,
+        azure_devops_pat: Optional[str] = None
+    ):
         """
-        Initializes the DeveloperAgent with a specified codebase path.
+        Initializes the DeveloperAgent with a specified codebase path and Azure DevOps PR tool parameters.
         :param codebase_path: Path to the codebase directory.
+        :param azure_devops_org: Azure DevOps organization name.
+        :param azure_devops_project: Azure DevOps project name.
+        :param azure_devops_repo_id: Azure DevOps repository ID.
+        :param azure_devops_pat: Azure DevOps Personal Access Token.
         """
         toolkit = FileManagementToolkit(
             root_dir=str(codebase_path)
@@ -22,6 +37,9 @@ class DeveloperAgent:
         self.tools = file_tools
         self.tools.append(RunShellCommandTool())
         self.tools.append(AzureDevOpsCommentTool())
+        # Add AzureDevOpsPRTool if all required parameters are provided
+        if all([azure_devops_org, azure_devops_project, azure_devops_repo_id, azure_devops_pat]):
+            self.tools.append(AzureDevOpsPRTool())
         self.system_prompt = "You are a developer agent. Your task is to assist with software development tasks."
         prompt = ChatPromptTemplate.from_messages(
             [

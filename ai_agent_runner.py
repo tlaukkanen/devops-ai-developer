@@ -46,7 +46,18 @@ def implement_task_logic(work_item, codebase_path='codebase'):
     frame = inspect.currentframe()
     args, _, _, values = inspect.getargvalues(frame)
     codebase_path = values.get('codebase_path', 'codebase')
-    agent = DeveloperAgent(codebase_path=codebase_path)
+    # Get Azure DevOps repo id from environment variable (must be set in pipeline)
+    azure_devops_org = os.environ.get("AZURE_DEVOPS_ORG")
+    azure_devops_project = os.environ.get("AZURE_DEVOPS_PROJECT")
+    azure_devops_repo_id = os.environ.get("AZURE_DEVOPS_REPO_ID")
+    azure_devops_pat = os.environ.get("AZURE_DEVOPS_PAT")
+    agent = DeveloperAgent(
+        codebase_path=codebase_path,
+        azure_devops_org=azure_devops_org,
+        azure_devops_project=azure_devops_project,
+        azure_devops_repo_id=azure_devops_repo_id,
+        azure_devops_pat=azure_devops_pat
+    )
     feature_name = work_item['fields'].get('System.Title', 'Unnamed Feature')
     specification = f"""
     Develop the feature: {feature_name}

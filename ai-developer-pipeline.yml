@@ -36,6 +36,7 @@ jobs:
           AZURE_DEVOPS_ORG: tlaukkanen
           AZURE_DEVOPS_PROJECT: simple-to-do
           AZURE_DEVOPS_PAT: $(System.AccessToken)
+          AZURE_DEVOPS_REPO_ID: $(AZURE_DEVOPS_REPO_ID)
 
       - script: |
           echo "##vso[task.setvariable variable=TaskId;isOutput=true]$(cat task_id.txt)"
@@ -77,6 +78,7 @@ jobs:
         env:
           AZURE_DEVOPS_ORG: tlaukkanen
           AZURE_DEVOPS_PROJECT: simple-to-do
+          AZURE_DEVOPS_REPO_ID: simple-to-do
           AZURE_DEVOPS_PAT: $(System.AccessToken)
           AZURE_OPENAI_API_KEY: $(AZURE_OPENAI_API_KEY)
           AZURE_OPENAI_ENDPOINT: $(AZURE_OPENAI_ENDPOINT)
