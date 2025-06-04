@@ -71,8 +71,8 @@ jobs:
           versionSpec: '3.12'
 
       - script: |
-          git config user.email "ai-developer@codeof.me"
-          git config user.name "AI Developer"
+          git config --global user.email "ai-developer@codeof.me"
+          git config --global user.name "AI Developer"
           
           pip install uv
           uv sync --quiet
