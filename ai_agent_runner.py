@@ -73,9 +73,10 @@ def implement_task_logic(work_item, codebase_path='codebase'):
     
     If you need to ask for more information, please add a comment to the work item.
 
-    When you are done, commit your changes and create a pull request for review and add a comment 
-    to the work item with the details of the implementation and include the pull request link in 
-    the comment. The comment supports markdown formatting.
+    When you are done, commit your changes and create a pull request for review. Include 
+    the work item number in the pull request description with `#` prefix. Add a comment to 
+    the work item with the details of the implementation and include the pull request link 
+    in the comment. The comments support markdown formatting.
     """
     response = agent.develop_feature(specification)
     #print(f"Agent response: {response}")
