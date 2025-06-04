@@ -22,7 +22,7 @@ def add_azure_devops_work_item_comment(
         return "Azure DevOps org, project, or PAT not set."
     url = (
         f"https://dev.azure.com/{org}/{project}/_apis/wit/workItems/"
-        f"{work_item_id}/comments?api-version=7.0-preview.3"
+        f"{work_item_id}/comments?format=markdown&api-version=7.2-preview.4"
     )
     data = {"text": comment}
     response = requests.post(
