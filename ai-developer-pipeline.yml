@@ -59,6 +59,7 @@ jobs:
 
       - checkout: simple-to-do
         path: 'simple-to-do'
+        persistCredentials: true
         displayName: 'Checkout simple-to-do repository'
 
       - task: UseNode@1
