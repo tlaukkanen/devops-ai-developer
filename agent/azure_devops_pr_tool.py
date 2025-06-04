@@ -9,12 +9,16 @@ class AzureDevOpsPRInput(BaseModel):
     target_branch: str = Field(..., description="The name of the target branch (e.g., 'main').")
     title: str = Field(..., description="The title of the pull request.")
     description: Optional[str] = Field("", description="The description of the pull request.")
+    work_item_ref: Optional[int] = Field(None, description="The ID of the work item to link to the pull request.")
+    auto_complete: Optional[bool] = Field(False, description="Whether to set the pull request to auto-complete.")
 
 def create_azure_devops_pull_request(
     source_branch: str,
     target_branch: str,
     title: str,
     description: Optional[str] = None,
+    work_item_ref: Optional[int] = None,
+    auto_complete: Optional[bool] = False,
     org: Optional[str] = None,
     project: Optional[str] = None,
     repo_id: Optional[str] = None,
@@ -40,12 +44,38 @@ def create_azure_devops_pull_request(
         "title": title,
         "description": description or "",
     }
+    # Attach work item via separate API call after PR creation, as workItemRefs is not a valid field for PR creation
     try:
         response = requests.post(api_url, json=data, headers=headers, auth=auth, timeout=30)
         response.raise_for_status()
+        pr = response.json()
+        pr_id = pr.get("pullRequestId")
+        pr_url = pr.get("url", "No URL returned")
+        # Attach work item if requested
+        if work_item_ref and pr_id:
+            wi_url = f"https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repo_id}/pullRequests/{pr_id}/workitems/{work_item_ref}?api-version=7.2-preview.2"
+            try:
+                wi_response = requests.put(wi_url, headers=headers, auth=auth, timeout=30)
+                wi_response.raise_for_status()
+            except Exception as wie:
+                return f"Pull request created: {pr_url} (work item link failed: {wie})"
+        # Set auto-complete if requested
+        if auto_complete and pr_id:
+            auto_complete_url = f"https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repo_id}/pullRequests/{pr_id}/autoComplete?api-version=7.2-preview.2"
+            auto_complete_data = {
+                "autoCompleteSetBy": {
+                    "id": None  # Let the API use the current user
+                }
+            }
+            try:
+                ac_response = requests.patch(auto_complete_url, json=auto_complete_data, headers=headers, auth=auth, timeout=30)
+                ac_response.raise_for_status()
+                return f"Pull request created and set to auto-complete: {pr_url}"
+            except Exception as ace:
+                return f"Pull request created: {pr_url} (auto-complete failed: {ace})"
+        return f"Pull request created: {pr_url}"
     except Exception as e:
         return f"Failed to create pull request: {e}"
-    return f"Pull request created: {response.json().get('url', 'No URL returned')}"
 
 class AzureDevOpsPRTool(StructuredTool):
     """
@@ -53,13 +83,13 @@ class AzureDevOpsPRTool(StructuredTool):
     """
     def __init__(self, org=None, project=None, repo_id=None, pat=None):
         super().__init__(
-            func=lambda source_branch, target_branch, title, description="": create_azure_devops_pull_request(
-                source_branch, target_branch, title, description, org=org, project=project, repo_id=repo_id, pat=pat
+            func=lambda source_branch, target_branch, title, description="", work_item_ref=None, auto_complete=False: create_azure_devops_pull_request(
+                source_branch, target_branch, title, description, work_item_ref, auto_complete, org=org, project=project, repo_id=repo_id, pat=pat
             ),
             name="create_azure_devops_pull_request",
             description=(
                 "Create a pull request in Azure DevOps. "
-                "Requires source_branch (str), target_branch (str), title (str), and optional description (str). "
+                "Requires source_branch (str), target_branch (str), title (str), optional description (str), optional work_item_ref (int), and optional auto_complete (bool). "
                 "Uses org, project, repo_id, and PAT from environment variables or constructor."
             ),
             args_schema=AzureDevOpsPRInput,
