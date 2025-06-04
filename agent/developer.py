@@ -60,9 +60,9 @@ class DeveloperAgent:
             agent=self.agent,
             tools=self.tools,
             verbose=True,
-            max_iterations=30,
+            max_iterations=40,
             return_intermediate_steps=True,
-            max_execution_time= 220,  # Set a maximum execution time of 120 seconds
+            max_execution_time=300,  # Set a maximum execution time of 300 seconds
         )
 
     def develop_feature(self, specification):
