@@ -9,7 +9,7 @@ class AzureDevOpsPRInput(BaseModel):
     target_branch: str = Field(..., description="The name of the target branch (e.g., 'main').")
     title: str = Field(..., description="The title of the pull request.")
     description: Optional[str] = Field("", description="The description of the pull request.")
-    work_item_ref: Optional[int] = Field(None, description="The ID of the work item to link to the pull request.")
+    work_item_id: int = Field(..., description="The ID of the work item to link to the pull request.")
     auto_complete: Optional[bool] = Field(False, description="Whether to set the pull request to auto-complete.")
 
 def create_azure_devops_pull_request(
@@ -17,7 +17,7 @@ def create_azure_devops_pull_request(
     target_branch: str,
     title: str,
     description: Optional[str] = None,
-    work_item_ref: Optional[int] = None,
+    work_item_id: int,
     auto_complete: Optional[bool] = False,
     org: Optional[str] = None,
     project: Optional[str] = None,
@@ -51,14 +51,15 @@ def create_azure_devops_pull_request(
         pr = response.json()
         pr_id = pr.get("pullRequestId")
         pr_url = pr.get("url", "No URL returned")
+        pr_web_url = f"https://dev.azure.com/{org}/{project}/_git/{repo_id}/pullrequest/{pr_id}"
         # Attach work item if requested
-        if work_item_ref and pr_id:
-            wi_url = f"https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repo_id}/pullRequests/{pr_id}/workitems/{work_item_ref}?api-version=7.2-preview.2"
+        if work_item_id and pr_id:
+            wi_url = f"https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repo_id}/pullRequests/{pr_id}/workitems/{work_item_id}?api-version=7.2-preview.2"
             try:
                 wi_response = requests.put(wi_url, headers=headers, auth=auth, timeout=30)
                 wi_response.raise_for_status()
             except Exception as wie:
-                return f"Pull request created: {pr_url} (work item link failed: {wie})"
+                return f"Pull request created: {pr_web_url} (work item link failed: {wie})"
         # Set auto-complete if requested
         if auto_complete and pr_id:
             auto_complete_url = f"https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repo_id}/pullRequests/{pr_id}/autoComplete?api-version=7.2-preview.2"
@@ -70,10 +71,10 @@ def create_azure_devops_pull_request(
             try:
                 ac_response = requests.patch(auto_complete_url, json=auto_complete_data, headers=headers, auth=auth, timeout=30)
                 ac_response.raise_for_status()
-                return f"Pull request created and set to auto-complete: {pr_url}"
+                return f"Pull request created and set to auto-complete: {pr_web_url}"
             except Exception as ace:
-                return f"Pull request created: {pr_url} (auto-complete failed: {ace})"
-        return f"Pull request created: {pr_url}"
+                return f"Pull request created: {pr_web_url} (auto-complete failed: {ace})"
+        return f"Pull request created: {pr_web_url}"
     except Exception as e:
         return f"Failed to create pull request: {e}"
 

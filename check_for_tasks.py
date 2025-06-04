@@ -34,6 +34,25 @@ def get_next_work_item():
         print("No new work items found. Setting task ID to 0.")
         return 0  # No new work items
     print(f"Next work item ID: {work_items[0]['id']}")
+    
+    # Remove the AI_DEVELOPER_TAG from the work item
+    work_item_id = work_items[0]["id"]
+    update_url = f"https://dev.azure.com/{AZURE_DEVOPS_ORG}/{AZURE_DEVOPS_PROJECT}/_apis/wit/workitems/{work_item_id}?api-version=7.0"
+    update_data = [
+        {
+            "op": "remove",
+            "path": "/fields/System.Tags",
+            "value": AI_DEVELOPER_TAG
+        }
+    ]
+
+    response = requests.patch(
+        update_url,
+        json=update_data,
+        auth=("", AZURE_DEVOPS_PAT)
+    )
+    response.raise_for_status()
+    print(f"Removed tag '{AI_DEVELOPER_TAG}' from work item {work_item_id}.")
     return work_items[0]["id"]
 
 

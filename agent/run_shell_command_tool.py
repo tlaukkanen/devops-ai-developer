@@ -17,8 +17,16 @@ def run_shell_command(command: str, cwd: str | None = None) -> str:
             timeout=120
         )
         if result.returncode == 0:
+            # Make sure that the output doesn't exceed 20k characters
+            # Display first 20k characters if it does
+            if len(result.stdout) > 20000:
+                return f"Output too long to display (exceeds 20,000 characters). First 20,000 characters:\n{result.stdout[:20000]}"
             return result.stdout.strip() or "Command executed successfully with no output."
         else:
+            # Make sure that the error output doesn't exceed 20k characters
+            # Display first 20k characters if it does
+            if len(result.stderr) > 20000:
+                return f"Error output too long to display (exceeds 20,000 characters). First 20,000 characters:\n{result.stderr[:20000]}"
             return f"Error (code {result.returncode}): {result.stdout.strip()}\n{result.stderr.strip()}"
     except Exception as e:
         return f"Exception while running command: {e}"
