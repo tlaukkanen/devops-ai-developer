@@ -44,7 +44,7 @@ jobs:
         displayName: 'Set Task ID Variable'
         name: SetTaskId
 
-  - job: RunAIAgent
+  - job: RunAIDeveloperAgent
     dependsOn: CheckForTasks
     variables:
       - name: TaskId
@@ -87,28 +87,3 @@ jobs:
           AZURE_OPENAI_API_KEY: $(AZURE_OPENAI_API_KEY)
           AZURE_OPENAI_ENDPOINT: $(AZURE_OPENAI_ENDPOINT)
       
-      # Zip the simple-to-do repository
-      - script: |
-          zip -r $(Pipeline.Workspace)/simple-to-do.zip . -x "node_modules/*"
-        displayName: 'Zip simple-to-do Repository'
-        workingDirectory: '$(Pipeline.Workspace)/simple-to-do'
-
-      # Upload the zip file as an artifact
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: '$(Pipeline.Workspace)/simple-to-do.zip'
-          ArtifactName: 'simple-to-do'
-          publishLocation: 'Container'
-
-      # - script: |
-      #     git config user.email "ai-bot@example.com"
-      #     git config user.name "AI Bot"
-      #     git checkout -b ai/task-${TASK_ID}
-      #     git add .
-      #     git commit -m "Auto-implemented task ${TASK_ID}"
-      #     git push origin ai/task-${TASK_ID}
-      #   displayName: 'Commit & Push Changes'
-
-      # - script: |
-      #     python create_pull_request.py ${TASK_ID}
-      #   displayName: 'Create Pull Request'
