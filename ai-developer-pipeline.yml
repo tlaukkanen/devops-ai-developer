@@ -71,11 +71,11 @@ jobs:
           versionSpec: '3.12'
 
       - script: |
-          git config --get user.name
-          git config --get user.email
+          git config user.email "ai-developer@codeof.me"
+          git config user.name "AI Developer"
           
           pip install uv
-          uv sync
+          uv sync --quiet
           uv run ai_agent_runner.py $(TaskId) --codebase-path ../simple-to-do
         displayName: 'Run LangChain AI Agent'
         workingDirectory: '$(Pipeline.Workspace)/devops-ai-developer'
