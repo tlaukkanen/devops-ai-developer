@@ -16,8 +16,8 @@ def create_azure_devops_pull_request(
     source_branch: str,
     target_branch: str,
     title: str,
-    description: Optional[str] = None,
     work_item_id: int,
+    description: Optional[str] = None,
     auto_complete: Optional[bool] = False,
     org: Optional[str] = None,
     project: Optional[str] = None,
@@ -84,8 +84,8 @@ class AzureDevOpsPRTool(StructuredTool):
     """
     def __init__(self, org=None, project=None, repo_id=None, pat=None):
         super().__init__(
-            func=lambda source_branch, target_branch, title, description="", work_item_ref=None, auto_complete=False: create_azure_devops_pull_request(
-                source_branch, target_branch, title, description, work_item_ref, auto_complete, org=org, project=project, repo_id=repo_id, pat=pat
+            func=lambda source_branch, target_branch, title, work_item_id, description="", auto_complete=True: create_azure_devops_pull_request(
+                source_branch, target_branch, title, work_item_id, description, auto_complete, org=org, project=project, repo_id=repo_id, pat=pat
             ),
             name="create_azure_devops_pull_request",
             description=(
