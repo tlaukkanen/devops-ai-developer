@@ -28,9 +28,10 @@ def create_azure_devops_pull_request(
     repo_id = repo_id or os.environ.get("AZURE_DEVOPS_REPO_ID")
     if not all([org, project, pat, repo_id]):
         return "Azure DevOps org, project, repo_id, or PAT not set."
-    api_url = f"https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repo_id}/pullrequests?api-version=7.1-preview.1"
+    api_url = f"https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repo_id}/pullrequests?api-version=7.1"
     headers = {
         'Content-Type': 'application/json',
+        'Authorization': f'Bearer {pat}' if pat else '',
     }
     auth = ("", str(pat) if pat is not None else "")
     data = {

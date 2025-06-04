@@ -1,16 +1,15 @@
-from langchain_openai import AzureChatOpenAI
+from typing import Optional
+
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.pydantic_v1 import BaseModel, Field
-from langchain_community.agent_toolkits.load_tools import load_tools
-
 from langchain_community.agent_toolkits import FileManagementToolkit
+from langchain_core.runnables import RunnableConfig
+from langchain_openai import AzureChatOpenAI
 
 from agent.azure_devops_comment_tool import AzureDevOpsCommentTool
-from agent.run_shell_command_tool import RunShellCommandTool
 from agent.azure_devops_pr_tool import AzureDevOpsPRTool
+from agent.run_shell_command_tool import RunShellCommandTool
 
-from typing import Optional
 
 class DeveloperAgent:
     def __init__(
@@ -67,11 +66,18 @@ class DeveloperAgent:
         )
 
     def develop_feature(self, specification):
+        """
+        Develops a feature based on the provided specification.
+        :param specification: The feature specification as a string.
+        :return: The response from the agent after processing the specification.
+        """
         print(f"Agent is developing feature with specification:\n{specification}")
         # Initiating LangChain agent execution...
-        config = {"configurable": {"session_id": "developer_agent"}, "max_concurrency": 1}
+        config: RunnableConfig = {
+            "configurable": {"session_id": "developer_agent"}, 
+            "max_concurrency": 1
+        }
         result = self.agent_executor.invoke(
             {"input": specification}, config=config)
         response = result["output"]
-        return response
         return response

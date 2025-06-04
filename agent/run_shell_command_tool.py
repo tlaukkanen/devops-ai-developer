@@ -19,7 +19,7 @@ def run_shell_command(command: str, cwd: str | None = None) -> str:
         if result.returncode == 0:
             return result.stdout.strip() or "Command executed successfully with no output."
         else:
-            return f"Error (code {result.returncode}): {result.stderr.strip()}"
+            return f"Error (code {result.returncode}): {result.stdout.strip()}\n{result.stderr.strip()}"
     except Exception as e:
         return f"Exception while running command: {e}"
 

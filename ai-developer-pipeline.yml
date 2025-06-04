@@ -70,6 +70,9 @@ jobs:
           versionSpec: '3.12'
 
       - script: |
+          git config --get user.name
+          git config --get user.email
+          
           pip install uv
           uv sync
           uv run ai_agent_runner.py $(TaskId) --codebase-path ../simple-to-do
