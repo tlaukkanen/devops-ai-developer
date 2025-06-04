@@ -35,30 +35,23 @@ def get_next_work_item():
         return 0  # No new work items
     print(f"Next work item ID: {work_items[0]['id']}")
     
-    # Remove the AI_DEVELOPER_TAG from the work item
-    work_item_id = work_items[0]["id"]
-    update_url = f"https://dev.azure.com/{AZURE_DEVOPS_ORG}/{AZURE_DEVOPS_PROJECT}/_apis/wit/workitems/{work_item_id}?api-version=7.0"
-    update_data = [
-        {
-            "op": "remove",
-            "path": "/fields/System.Tags",
-            "value": AI_DEVELOPER_TAG
-        }
-    ]
-
-    response = requests.patch(
-        update_url,
-        json=update_data,
-        auth=("", AZURE_DEVOPS_PAT)
+    # Remove the AI_DEVELOPER_TAG from the project using the DELETE method and the correct tag API
+    tag_delete_url = f"https://dev.azure.com/{AZURE_DEVOPS_ORG}/{AZURE_DEVOPS_PROJECT}/_apis/wit/tags/{AI_DEVELOPER_TAG}?api-version=7.2-preview.1"
+    if AZURE_DEVOPS_PAT is None:
+        raise ValueError("AZURE_DEVOPS_PAT environment variable is not set.")
+    response = requests.delete(
+        tag_delete_url,
+        auth=("", str(AZURE_DEVOPS_PAT)),
+        timeout=10
     )
     response.raise_for_status()
-    print(f"Removed tag '{AI_DEVELOPER_TAG}' from work item {work_item_id}.")
+    print(f"Removed tag '{AI_DEVELOPER_TAG}' from project.")
     return work_items[0]["id"]
 
 
 def main():
     work_item_id = get_next_work_item()
-    with open("task_id.txt", "w") as f:
+    with open("task_id.txt", "w", encoding="utf-8") as f:
         f.write(str(work_item_id))
 
 
