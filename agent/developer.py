@@ -49,7 +49,8 @@ class DeveloperAgent:
         )
         self.llm = AzureChatOpenAI(
             azure_deployment="gpt-4.1",
-            api_version="2024-12-01-preview"
+            api_version="2024-12-01-preview",
+            stream_usage=True
         )
         self.agent = create_tool_calling_agent(
             llm=self.llm,
@@ -79,5 +80,8 @@ class DeveloperAgent:
         }
         result = self.agent_executor.invoke(
             {"input": specification}, config=config)
+        print(f"Prompt tokens used    : {result['token_usage']['prompt_tokens']}")
+        print(f"Completion tokens used: {result['token_usage']['completion_tokens']}")
+        print(f"Total tokens used     : {result['token_usage']['total_tokens']}")
         response = result["output"]
         return response
