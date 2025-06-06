@@ -80,8 +80,16 @@ class DeveloperAgent:
         }
         result = self.agent_executor.invoke(
             {"input": specification}, config=config)
-        print(f"Prompt tokens used    : {result['token_usage']['prompt_tokens']}")
-        print(f"Completion tokens used: {result['token_usage']['completion_tokens']}")
-        print(f"Total tokens used     : {result['token_usage']['total_tokens']}")
+        
+        # Check if token usage is available and print if it exists
+        if 'token_usage' in result and result['token_usage']:
+            token_usage = result['token_usage']
+            print(f"Prompt tokens used    : {token_usage.get('prompt_tokens', 'N/A')}")
+            print(f"Completion tokens used: {token_usage.get('completion_tokens', 'N/A')}")
+            print(f"Total tokens used     : {token_usage.get('total_tokens', 'N/A')}")
+        else:
+            print("Token usage information not available in result")
+            print(f"Available result keys: {list(result.keys())}")
+        
         response = result["output"]
         return response
